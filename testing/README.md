@@ -22,6 +22,14 @@ individually tested for each Fortran unit testing tool we select to test.
     3. [ ] Write tests to cover each of the key features determined in the previous step.
 - Build template implementations for the tools we recommend.
 
-## Candidate Tools
-- [test-drive](./tests/test-drive)
-- [pFUnit](./tests/pFUnit)
+## Candidate Tools 
+The table below shows forran unit tetsing tools and the features they support.
+
+| Feature | [test-drive](./tests/test-drive) | [pFUnit](./tests/pFUnit) |
+|---------|----------------------------------|--------------------------|
+| Run individual tests | Y, see [main.f90](./tests/test-drive/main.f90) | ? |
+| Mocking | N | ? |
+| Stubbing | N | ? |
+| Data driven tests | N | ? |
+| Coverage report | Y, with fpm | ? | 
+| Skip tests | Y, see [test_calc_pi.f90::test_skip_example](./tests/test-drive/tests/test_calc_pi.f90) | ? |

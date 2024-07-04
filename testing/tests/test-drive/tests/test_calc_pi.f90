@@ -1,5 +1,5 @@
 module test_cal_pi
-    use testdrive, only : new_unittest, unittest_type, error_type, check
+    use testdrive, only : new_unittest, unittest_type, error_type, check, skip_test
     use, intrinsic :: iso_fortran_env
 
     use calc_pi, only : calculate_pi
@@ -21,10 +21,14 @@ contains
 
         testsuite = [ &
             new_unittest("calculate_pi", test_calculate_pi), &
-            new_unittest("calculate_pi_parameterised", test_calculate_pi_parameterised) &
-            ]
-
+            new_unittest("calculate_pi_parameterised", test_calculate_pi_parameterised), &
+            new_unittest("test_skip_example", test_skip_example) &
+        ]
     end subroutine collect_calc_pi_suite
+
+    !------------------------
+    ! Tests
+    !------------------------
 
     subroutine test_calculate_pi(error)
         type(error_type), allocatable, intent(out) :: error
@@ -33,7 +37,6 @@ contains
 
         actual_pi = calculate_pi(10000_dp)
         call check(error, actual_pi, expected_pi, thr=1e-06_dp)
-        if (allocated(error)) return
     end subroutine test_calculate_pi
 
     subroutine test_calculate_pi_parameterised(error)
@@ -47,8 +50,19 @@ contains
         do i = 1, 5
             actual_pi = calculate_pi(steps_to_test(i))
             call check(error, expected_pi, actual_pi, thr=thresholds_to_test(i))
-            if (allocated(error)) return
         end do 
     end subroutine test_calculate_pi_parameterised
+
+    subroutine test_skip_example(error)
+        type(error_type), allocatable, intent(out) :: error
+
+        real(kind=real64)   :: actual_pi, expected_pi = 3.141592
+
+        call skip_test(error, "This feature is not implemented yet")
+        return
+
+        actual_pi = calculate_pi(10000_dp)
+        call check(error, actual_pi, expected_pi, thr=1e-06_dp)
+    end subroutine test_skip_example
 
 end module test_cal_pi
