@@ -23,10 +23,11 @@ individually tested for each Fortran unit testing tool we select to test.
 - Build template implementations for the tools we recommend.
 
 ## Candidate Tools 
-The table below shows forran unit tetsing tools and the features they support.
+The table below shows forran unit testing tools and the features they support.
 
 | Feature | [test-drive](./tests/test-drive) | [pFUnit](./tests/pFUnit) |
 |---------|----------------------------------|--------------------------|
+| Compilers | gfortran (homebrew) |  |
 | Run individual tests | Y, see [main.f90](./tests/test-drive/main.f90) | ? |
 | Mocking | N | ? |
 | Stubbing | N | ? |
