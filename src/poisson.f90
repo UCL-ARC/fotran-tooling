@@ -57,7 +57,7 @@
 !!                                                           I1 *-----* I2                            *
 !!                                                                -->                                 *
 !!                                                                                                    *
-!!    vb2_index(1:num_elements) .................... Points to the index in "vb2" where the element   *
+!!    vb_index(1:num_elements) .................... Points to the index in "vb2" where the element   *
 !!                                                   values of thez parameters Kx,Ky,Q are stored     *
 !!    boundary_node_num(1:2,1:num_boundary_points) . (I1,I2) I1 is the boundary node number. I2 is    *
 !!                                                   either 0 (no Dirichlet BC) or a pointer (I2>0)   *
@@ -102,15 +102,15 @@ contains
       subroutine open_file(file_name, status, file_io)
             implicit none
 
-            integer, intent(out) :: file_io
+            integer, intent(in) :: file_io
             character*120, intent(in) :: file_name
             character*3, intent(in) :: status
 
             integer :: iostat
 
-            print *, file_name
+            print *, trim(file_name)
             
-            open (file_io,                  &
+            open (unit=file_io,             &
                   file=trim(file_name),     &
                   status=status,            &
                   IOSTAT=iostat)
@@ -127,12 +127,12 @@ contains
       !!    "inp" reads the input data: triangular mesh and problem parameters.      *
       !!                                                                             *
       !!-----------------------------------------------------------------------------*
-      subroutine inp(element_to_node,vb2_index,coordinates,boundary_node_num,num_side_nodes,vb,vb1,vb2,file_io)
+      subroutine inp(element_to_node,vb_index,coordinates,boundary_node_num,num_side_nodes,vb,vb1,vb2,file_io)
             implicit none
 
-            integer, intent(out) :: element_to_node(3,mxp), vb2_index(mxe), coordinates(2, mxp), boundary_node_num(2,mxb), &
+            integer, intent(out) :: element_to_node(3,mxp), vb_index(mxe), boundary_node_num(2,mxb), &
                                     num_side_nodes(4,mxb)
-            real, intent(out)     :: vb(3,mxc), vb1(mxc), vb2(mxc)
+            real, intent(out)     :: vb(3,mxc), vb1(mxc), vb2(mxc), coordinates(2, mxp)
 
             integer      :: file_io, mx, ib, ip, ie, jb, jp, je, icheck
             character*80 :: text
@@ -200,7 +200,7 @@ contains
             !! 
             read(file_io,'(a)') text
             do ie=1,num_elements
-                  read(file_io,*) je,element_to_node(1,je),element_to_node(2,je),element_to_node(3,je),vb2_index(je)
+                  read(file_io,*) je,element_to_node(1,je),element_to_node(2,je),element_to_node(3,je),vb_index(je)
             end do 
             
             !!
@@ -239,14 +239,14 @@ contains
       !!    method.                                                                  *
       !!                                                                             *
       !!-----------------------------------------------------------------------------*
-      subroutine pcg(element_to_node,vb2_index,coordinates,nodal_value_of_f,boundary_node_num,num_side_nodes,vb,vb1,vb2,element_stiffness,rhs_vector,b,f_increment,boundary_index,pre_conditioning_matrix)
+      subroutine pcg(element_to_node,vb_index,coordinates,nodal_value_of_f,boundary_node_num,num_side_nodes,vb,vb1,vb2,element_stiffness,rhs_vector,b,f_increment,boundary_index,pre_conditioning_matrix)
             implicit none
 
             real, parameter :: eps = 1.e-04
 
-            integer, intent(inout) :: element_to_node(3,mxp), vb2_index(mxe), coordinates(2, mxp), boundary_node_num(2,mxb),    &
+            integer, intent(inout) :: element_to_node(3,mxp), vb_index(mxe), boundary_node_num(2,mxb),    &
                                     num_side_nodes(4,mxb), boundary_index(mxp)
-            real, intent(inout)    :: nodal_value_of_f(mxp), rhs_vector(mxp), b(mxp), f_increment(mxp), vb(3,mxc), vb1(mxc), &
+            real, intent(inout)    :: coordinates(2, mxp), nodal_value_of_f(mxp), rhs_vector(mxp), b(mxp), f_increment(mxp), vb(3,mxc), vb1(mxc), &
                                     vb2(mxc), element_stiffness(6,mxe), pre_conditioning_matrix(mxp)
             
             integer      :: file_io, mx, ib, ip, ie, jb, jp, je, icheck, nit, in, ip1, ip2, ip3, ix, it
@@ -257,7 +257,7 @@ contains
             logical :: is_converged
             
             tol = eps*eps
-            nit = 10*num_nodes
+            nit = 100*num_nodes
 
             !!
             !! *** Initial guess for the solution vector nodal_value_of_f
@@ -287,7 +287,7 @@ contains
                   ip1      = element_to_node(1,ie)
                   ip2      = element_to_node(2,ie)
                   ip3      = element_to_node(3,ie)
-                  ix       = vb2_index(ie)
+                  ix       = vb_index(ie)
                   akx      = vb(1,ix)
                   aky      = vb(2,ix)
                   qq       = vb(3,ix)
@@ -395,6 +395,7 @@ contains
                         energy = energy+b(ip)*rhs_vector(ip)
                   end do
                   beta       = energy/energy_old
+                  write(*,*) "energy: ", energy, "energy_old: ", energy_old
                   energy_old = energy
 
                   !!
@@ -466,8 +467,8 @@ contains
       subroutine out(element_to_node,coordinates,nodal_value_of_f,file_io)
             implicit none
 
-            integer, intent(in) :: element_to_node(3,mxp), coordinates(2, mxp), file_io
-            real, intent(in)    :: nodal_value_of_f(mxp)
+            integer, intent(in) :: element_to_node(3,mxp), file_io
+            real, intent(in)    :: nodal_value_of_f(mxp), coordinates(2, mxp)
 
             integer :: ip, ie
             real    :: z

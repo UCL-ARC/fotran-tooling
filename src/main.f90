@@ -3,12 +3,12 @@ program main
 
     implicit none
 
-    integer       :: coordinates(2, mxp), boundary_index(mxp), element_to_node(3,mxe),    &
-                     vb2_index(mxe), boundary_node_num(2,mxb), num_side_nodes(4,mxb)
-    real          :: nodal_value_of_f(mxp), rhs_vector(mxp), beta(mxp), f_increment(mxp), &
+    integer       :: boundary_index(mxp), element_to_node(3,mxe),    &
+                     vb_index(mxe), boundary_node_num(2,mxb), num_side_nodes(4,mxb)
+    real          :: coordinates(2, mxp), nodal_value_of_f(mxp), rhs_vector(mxp), beta(mxp), f_increment(mxp), &
                      vb1(mxc), vb2(mxc), vb(3,mxc), element_stiffness(6,mxe),             &
                      pre_conditioning_matrix(mxp)
-    integer       :: fname_io, fname_out_io
+    integer       :: fname_io = 100, fname_out_io = 101
     character*120 :: input_fname, output_fname
 
     !!
@@ -30,12 +30,12 @@ program main
     !!
     !! *** Reads the triangular mesh and problem constants: Kx,Ky,Q,fp,q
     !!
-    call inp(element_to_node,vb2_index,coordinates,boundary_node_num,num_side_nodes,vb,vb1,vb2,fname_io)
+    call inp(element_to_node,vb_index,coordinates,boundary_node_num,num_side_nodes,vb,vb1,vb2,fname_io)
 
     !!
     !! *** Assembles and solves the system of equations
     !!
-    call pcg(element_to_node,vb2_index,coordinates,nodal_value_of_f,boundary_node_num,num_side_nodes,vb,vb1,vb2,element_stiffness,rhs_vector,beta,f_increment,boundary_index,pre_conditioning_matrix)
+    call pcg(element_to_node,vb_index,coordinates,nodal_value_of_f,boundary_node_num,num_side_nodes,vb,vb1,vb2,element_stiffness,rhs_vector,beta,f_increment,boundary_index,pre_conditioning_matrix)
 
     !!
     !! *** Writes the computed solution
