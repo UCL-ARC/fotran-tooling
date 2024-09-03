@@ -132,9 +132,10 @@ contains
 
             integer, intent(out) :: element_to_node(3,mxp), vb_index(mxe), boundary_node_num(2,mxb), &
                                     num_side_nodes(4,mxb)
-            real, intent(out)     :: vb(3,mxc), vb1(mxc), vb2(mxc), coordinates(2, mxp)
+            real, intent(out)    :: vb(3,mxc), vb1(mxc), vb2(mxc), coordinates(2, mxp)
+            integer, intent(in)  :: file_io
 
-            integer      :: file_io, mx, ib, ip, ie, jb, jp, je, icheck
+            integer      :: mx, ib, ip, ie, jb, jp, je, icheck
             character*80 :: text
 
             read(file_io,'(a)') text
@@ -249,11 +250,10 @@ contains
             real, intent(inout)    :: coordinates(2, mxp), nodal_value_of_f(mxp), rhs_vector(mxp), b(mxp), f_increment(mxp), vb(3,mxc), vb1(mxc), &
                                     vb2(mxc), element_stiffness(6,mxe), pre_conditioning_matrix(mxp)
             
-            integer      :: file_io, mx, ib, ip, ie, jb, jp, je, icheck, nit, in, ip1, ip2, ip3, ix, it
+            integer      :: ib, ip, ie, nit, in, ip1, ip2, ip3, ix, it
             real         :: tol, va, akx, aky, qq, ar, a1, a2, qa, qb, x21, y21, x31, y31, s1x, s1y, s2x, &
                             s2y, s3x, s3y, al, d1, d2, d3, f1, f2, f3, rh0, beta, energy_old, energy,     &
                             eta, res, ad
-            character*80 :: text
             logical :: is_converged
             
             tol = eps*eps
@@ -262,13 +262,11 @@ contains
             !!
             !! *** Initial guess for the solution vector nodal_value_of_f
             !!
-            do ip=1,num_nodes
-                  boundary_index(ip) = 1
-                  nodal_value_of_f(ip) = 0.0
-                  f_increment(ip) = 0.0
-                  pre_conditioning_matrix(ip) = 0.0
-                  rhs_vector(ip) = 0.0
-            end do 
+            boundary_index(:num_nodes)=1
+            nodal_value_of_f(:num_nodes)=0.0
+            f_increment(:num_nodes) = 0.0
+            pre_conditioning_matrix(:num_nodes) = 0.0
+            rhs_vector(:num_nodes) = 0.0 
             
             !!
             !! *** Dirichlet type b.c.
@@ -314,7 +312,7 @@ contains
                   element_stiffness(4,ie) = a1*( akx*s1x*s2x + aky*s1y*s2y )
                   element_stiffness(5,ie) = a1*( akx*s2x*s3x + aky*s2y*s3y )
                   element_stiffness(6,ie) = a1*( akx*s1x*s3x + aky*s1y*s3y )
-                  qa       = 0.3333333*qq*ar
+                  qa       = (1.0/3.0)*qq*ar
 
                   !!
                   !! *** RHS

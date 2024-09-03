@@ -8,10 +8,9 @@ program mesh_generator
     real(kind=real64)             :: edge_size
 
     ! Mesh variables
-    integer :: num_nodes, num_elements, num_boundary_nodes, &
-               num_sets, num_dirichlet_boundary_conditions,  &
-               num_neumann_boundary_conditions, num_nodes_per_edge, & 
-               num_edges_per_boundary, num_nodes_per_boundary, i, j, counter, bottom_left_node
+    integer :: i, j, num_nodes, num_elements, num_boundary_nodes, &
+               num_edges_per_boundary, num_nodes_per_boundary,    &
+               counter, bottom_left_node
     integer, dimension(:, :), allocatable :: elements, boundary_edges
     real(kind=real64), dimension(:, :), allocatable :: nodes
 
@@ -30,83 +29,112 @@ program mesh_generator
     write(*,'(A,1I16)') "box size: ", box_size 
     write(*,*) " process: ", edge_size
     
-    ! Calculate mesh 
-    num_edges_per_boundary = floor(box_size / edge_size)
-    num_nodes_per_boundary = num_edges_per_boundary + 1
-    num_nodes = num_nodes_per_boundary**2
-    num_boundary_nodes = (num_edges_per_boundary) * 4
-    num_elements = 2 * (num_edges_per_boundary)**2
-
-    write(*,*) "num_edges_per_boundary", num_edges_per_boundary
-    write(*,*) "num_nodes_per_boundary", num_nodes_per_boundary
-    write(*,*) "num_nodes", num_nodes
-    write(*,*) "num_boundary_nodes", num_boundary_nodes
-    write(*,*) "num_elements", num_elements
+    call calculate_mesh_parameters(num_edges_per_boundary, num_nodes_per_boundary, num_nodes, num_boundary_nodes, num_elements)
 
     ! Allocate arrays
     allocate(nodes(2, num_nodes))
     allocate(elements(3, num_elements))
     allocate(boundary_edges(3, num_boundary_nodes))
 
-    counter = 1
-    do i = 1, num_nodes_per_boundary
-        do j = 1, num_nodes_per_boundary
-            nodes(1, counter) = i
-            nodes(2, counter) = j
-            counter = counter + 1
-        end do
-    end do
-
-    counter = 1
-    do i = 1, num_edges_per_boundary
-        do j = 1, num_edges_per_boundary
-            bottom_left_node = j + (i - 1) * num_nodes_per_boundary
-
-            elements(1, counter) = bottom_left_node
-            elements(2, counter) = bottom_left_node + 1
-            elements(3, counter) = bottom_left_node + 1 + num_nodes_per_boundary
-
-            elements(1, counter + num_edges_per_boundary) = bottom_left_node
-            elements(2, counter + num_edges_per_boundary) = bottom_left_node + num_nodes_per_boundary + 1
-            elements(3, counter + num_edges_per_boundary) = bottom_left_node + num_nodes_per_boundary
-
-            counter = counter + 1
-        end do 
-        counter = counter + num_edges_per_boundary
-    end do
-
-    ! If we are along the bottom boundary
-    do i = 1, num_edges_per_boundary
-        ! bottom boundary 
-        boundary_edges(1, i) = i       ! left node
-        boundary_edges(2, i) = i + 1   ! right node
-        boundary_edges(3, i) = i*2 - 1 ! element
-
-        ! right boundary
-        boundary_edges(1, i + num_edges_per_boundary) = i       * num_nodes_per_boundary
-        boundary_edges(2, i + num_edges_per_boundary) = (i + 1) * num_nodes_per_boundary
-        boundary_edges(3, i + num_edges_per_boundary) = (2*i - 1) * num_edges_per_boundary
-
-        ! top boundary
-        boundary_edges(1, i + num_edges_per_boundary * 2) = num_nodes - i + 1
-        boundary_edges(2, i + num_edges_per_boundary * 2) = num_nodes - i
-        boundary_edges(2, i + num_edges_per_boundary * 2) = num_elements - i + 1
-
-        ! left boundary
-        boundary_edges(1, i + num_edges_per_boundary * 3) = (num_nodes_per_boundary - i) * num_nodes_per_boundary + 1
-        boundary_edges(2, i + num_edges_per_boundary * 3) = (num_nodes_per_boundary - 1 - i) * num_nodes_per_boundary + 1
-        boundary_edges(3, i + num_edges_per_boundary * 3) = num_elements - (num_edges_per_boundary - 1) - (2 * (i - 1) * num_edges_per_boundary)
-    end do
-
-    call write_mesh_to_file()
+    call calculate_mesh(num_edges_per_boundary, num_nodes, num_elements, num_boundary_nodes, nodes, elements, boundary_edges)
+    
+    call write_mesh_to_file(num_nodes, num_elements, num_boundary_nodes)
 
 contains
-    subroutine write_mesh_to_file()
+    subroutine calculate_mesh_parameters(num_edges_per_boundary, num_nodes_per_boundary, num_nodes, num_boundary_nodes, num_elements)
         implicit none
+        integer, intent(out) :: num_edges_per_boundary, num_nodes_per_boundary, num_nodes, num_boundary_nodes, num_elements
+
+        num_edges_per_boundary = floor(box_size / edge_size)
+        num_nodes_per_boundary = num_edges_per_boundary + 1
+        num_nodes = num_nodes_per_boundary**2
+        num_boundary_nodes = (num_edges_per_boundary) * 4
+        num_elements = 2 * (num_edges_per_boundary)**2
+
+        write(*,*) "** Mesh Parameters **"
+        write(*,*) "   num_edges_per_boundary:", num_edges_per_boundary
+        write(*,*) "   num_nodes_per_boundary:", num_nodes_per_boundary
+        write(*,*) "   num_nodes:", num_nodes
+        write(*,*) "   num_boundary_nodes:", num_boundary_nodes
+        write(*,*) "   num_elements:", num_elements
+    end subroutine calculate_mesh_parameters
+
+    subroutine calculate_mesh(num_edges_per_boundary, num_nodes, num_elements, num_boundary_nodes, nodes, elements, boundary_edges)
+        implicit none
+        integer, intent(in) :: num_edges_per_boundary, num_nodes, num_boundary_nodes, num_elements
+        integer, dimension(3, num_elements), intent(inout) :: elements
+        integer, dimension(3, num_boundary_nodes), intent(inout) :: boundary_edges
+        real(kind=real64), dimension(2, num_nodes), intent(inout) :: nodes
+        
+        integer :: num_nodes_per_boundary
+
+        num_nodes_per_boundary = num_edges_per_boundary + 1
+
+        counter = 1
+        do i = 1, num_nodes_per_boundary
+            do j = 1, num_nodes_per_boundary
+                nodes(1, counter) = i
+                nodes(2, counter) = j
+                counter = counter + 1
+            end do
+        end do
+
+        counter = 1
+        do i = 1, num_edges_per_boundary
+            do j = 1, num_edges_per_boundary
+                bottom_left_node = j + (i - 1) * num_nodes_per_boundary
+
+                elements(1, counter) = bottom_left_node
+                elements(2, counter) = bottom_left_node + 1
+                elements(3, counter) = bottom_left_node + 1 + num_nodes_per_boundary
+
+                elements(1, counter + num_edges_per_boundary) = bottom_left_node
+                elements(2, counter + num_edges_per_boundary) = bottom_left_node + num_nodes_per_boundary + 1
+                elements(3, counter + num_edges_per_boundary) = bottom_left_node + num_nodes_per_boundary
+
+                counter = counter + 1
+            end do 
+            counter = counter + num_edges_per_boundary
+        end do
+
+        ! If we are along the bottom boundary
+        do i = 1, num_edges_per_boundary
+            ! bottom boundary 
+            boundary_edges(1, i) = i       ! left node
+            boundary_edges(2, i) = i + 1   ! right node
+            boundary_edges(3, i) = i*2 - 1 ! element
+
+            ! right boundary
+            boundary_edges(1, i + num_edges_per_boundary) = i       * num_nodes_per_boundary
+            boundary_edges(2, i + num_edges_per_boundary) = (i + 1) * num_nodes_per_boundary
+            boundary_edges(3, i + num_edges_per_boundary) = (2*i - 1) * num_edges_per_boundary
+
+            ! top boundary
+            boundary_edges(1, i + num_edges_per_boundary * 2) = num_nodes - i + 1
+            boundary_edges(2, i + num_edges_per_boundary * 2) = num_nodes - i
+            boundary_edges(2, i + num_edges_per_boundary * 2) = num_elements - i + 1
+
+            ! left boundary
+            boundary_edges(1, i + num_edges_per_boundary * 3) = (num_nodes_per_boundary - i) * num_nodes_per_boundary + 1
+            boundary_edges(2, i + num_edges_per_boundary * 3) = (num_nodes_per_boundary - 1 - i) * num_nodes_per_boundary + 1
+            boundary_edges(3, i + num_edges_per_boundary * 3) = num_elements - (num_edges_per_boundary - 1) - (2 * (i - 1) * num_edges_per_boundary)
+        end do
+
+    end subroutine calculate_mesh
+
+    subroutine write_mesh_to_file(num_nodes, num_elements, num_boundary_nodes)
+        implicit none
+        integer, intent(in) :: num_nodes, num_elements, num_boundary_nodes
+
         character*11 :: file_name
         integer :: file_io
         integer :: iostat
-        integer :: i
+        integer :: i, num_sets, num_dirichlet_boundary_conditions, num_neumann_boundary_conditions
+
+        ! Baked in defaults 
+        num_sets = 1
+        num_dirichlet_boundary_conditions = 1
+        num_neumann_boundary_conditions = 0
 
         file_name = "square_mesh"
         file_io = 100
@@ -124,7 +152,7 @@ contains
         end if
         
         write(file_io,*) "! num_nodes, num_elements, num_boundary_points, num_sets, num_dirichlet_boundary_conditions, num_neumann_boundary_conditions"
-        write(file_io,*) num_nodes, num_elements, num_boundary_nodes, 1, 1, 0
+        write(file_io,*) num_nodes, num_elements, num_boundary_nodes, num_sets, num_dirichlet_boundary_conditions, num_neumann_boundary_conditions
         
         write(file_io,*) "! jb,vb(1,jb),vb(2,jb),vb(3,jb) - as many lines as num_sets"
         write(file_io,*) 1, 1, 1, 1
