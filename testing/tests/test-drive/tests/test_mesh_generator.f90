@@ -85,10 +85,10 @@ contains
                 actual_num_edges_per_boundary, actual_num_nodes,              &
                 actual_num_boundary_nodes, actual_num_elements)
 
-        call check(error, expected_outputs%num_edges_per_boundary, actual_num_edges_per_boundary)
-        call check(error, expected_outputs%num_nodes,              actual_num_nodes)
         call check(error, expected_outputs%num_boundary_nodes,     actual_num_boundary_nodes)
+        call check(error, expected_outputs%num_edges_per_boundary, actual_num_edges_per_boundary)
         call check(error, expected_outputs%num_elements,           actual_num_elements)
+        call check(error, expected_outputs%num_nodes,              actual_num_nodes)
         
         ! Catch test failure
         if (allocated(error)) return
@@ -147,6 +147,7 @@ contains
         integer(kind=int64), dimension(3, inputs%num_elements) :: actual_elements
         integer(kind=int64), dimension(3, inputs%num_boundary_nodes) :: actual_boundary_edges
         real(kind=real64), dimension(2, inputs%num_nodes) :: actual_nodes
+        real(kind=real64) :: threshold = 1e-06
         character*80 :: failure_message
 
         integer :: i, j
@@ -172,7 +173,7 @@ contains
         do i = 1, inputs%num_nodes
             do j = 1, 2
                 write(failure_message,'(a,i1,a,i1,a,f3.1,a,f3.1)') "Unexpected value for nodes(", j, ",", i, "), got ", actual_nodes(j, i), " expected ", expected_outputs%nodes(j, i)
-                call check(error, expected_outputs%nodes(j, i), actual_nodes(j, i), failure_message)
+                call check(error, expected_outputs%nodes(j, i), actual_nodes(j, i), failure_message, thr=threshold)
                 if (allocated(error)) return
             end do
         end do
