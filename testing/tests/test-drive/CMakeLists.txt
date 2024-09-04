@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
 # Set project name
 project(
-  "fortran-unit-testing-with-test-drive"
+  "test-drive-tests"
   LANGUAGES "Fortran"
   VERSION "0.0.1"
   DESCRIPTION "Playground project for testing test-drive"
@@ -33,23 +33,27 @@ if(NOT EXISTS "${${test_pkg}_BINARY_DIR}/include")
 endif()
 
 # Define src and test files
-set(PROJ_SRC_DIR "${PROJECT_SOURCE_DIR}/../../src")
+set(PROJ_SRC_DIR "${PROJECT_SOURCE_DIR}/../../../src")
 set(PROJ_TEST_DIR "${PROJECT_SOURCE_DIR}")
-
-file(GLOB PROJ_SOURCES          "${PROJ_SRC_DIR}/*.f90")
+file(GLOB PROJ_MESH_GENERATOR_SOURCES          "${PROJ_SRC_DIR}/mesh_generator/*.f90")
+file(GLOB PROJ_POISSON_SOURCES          "${PROJ_SRC_DIR}/poisson/*.f90")
 file(GLOB PROJ_TEST_SOURCES     "${PROJ_TEST_DIR}/tests/*.f90")
 
-# Filter out the main.cxx file. We can only have one main() function in our tests
-set(PROJ_SOURCES_EXC_MAIN ${PROJ_SOURCES})
-list(FILTER PROJ_SOURCES_EXC_MAIN EXCLUDE REGEX ".*main.f90")
+# Filter out the main.f90 files. We can only have one main() function in our tests
+set(PROJ_POISSON_SOURCES_EXC_MAIN ${PROJ_POISSON_SOURCES})
+set(PROJ_MESH_GENERATOR_SOURCES_EXC_MAIN ${PROJ_MESH_GENERATOR_SOURCES})
+list(FILTER PROJ_POISSON_SOURCES_EXC_MAIN EXCLUDE REGEX ".*main.f90")
+list(FILTER PROJ_MESH_GENERATOR_SOURCES_EXC_MAIN EXCLUDE REGEX ".*main.f90")
 
-# Build src executable
-add_executable("${PROJECT_NAME}" "${PROJ_SOURCES}")
+# Build src executables
+add_executable("${PROJECT_NAME}-mesh-generator" "${PROJ_MESH_GENERATOR_SOURCES}")
+add_executable("${PROJECT_NAME}-poisson" "${PROJ_POISSON_SOURCES}")
 
 # Unit testing
 set(
   tests
-  "calc_pi"
+  "mesh_generator"
+  "poisson"
 )
 foreach(t IN LISTS tests)
   string(MAKE_C_IDENTIFIER ${t} t) 
@@ -60,7 +64,8 @@ add_executable(
   "${PROJECT_NAME}-tester"
   "${PROJ_TEST_DIR}/main.f90"
   "${PROJ_TEST_SOURCES}"
-  "${PROJ_SOURCES_EXC_MAIN}"
+  "${PROJ_POISSON_SOURCES_EXC_MAIN}"
+  "${PROJ_MESH_GENERATOR_SOURCES_EXC_MAIN}"
 )
 target_link_libraries(
   "${PROJECT_NAME}-tester"

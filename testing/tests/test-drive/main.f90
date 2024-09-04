@@ -4,7 +4,7 @@ program tester
     use testdrive, only : run_testsuite, new_testsuite, testsuite_type, &
         & select_suite, run_selected, get_argument
 
-    use test_cal_pi, only : collect_calc_pi_suite
+    use test_mesh_generator, only : collect_mesh_generator_testsuite
 
     implicit none
 
@@ -16,7 +16,7 @@ program tester
     stat = 0
 
     testsuites = [ &
-        new_testsuite("suite1", collect_calc_pi_suite) &
+        new_testsuite("suite1", collect_mesh_generator_testsuite) &
         ]
 
     call get_argument(1, suite_name)
