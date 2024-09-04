@@ -69,8 +69,8 @@ contains
         counter = 1
         do i = 1, num_nodes_per_boundary
             do j = 1, num_nodes_per_boundary
-                nodes(1, counter) = i
-                nodes(2, counter) = j
+                nodes(1, counter) = i ! x coordinate
+                nodes(2, counter) = j ! y coordinate
                 counter = counter + 1
             end do
         end do
@@ -80,9 +80,9 @@ contains
             do j = 1, num_edges_per_boundary
                 bottom_left_node = j + (i - 1) * num_nodes_per_boundary
 
-                elements(1, counter) = bottom_left_node
-                elements(2, counter) = bottom_left_node + 1
-                elements(3, counter) = bottom_left_node + 1 + num_nodes_per_boundary
+                elements(1, counter) = bottom_left_node                              ! bottom_left node
+                elements(2, counter) = bottom_left_node + 1                          ! Next node anti-clockwise
+                elements(3, counter) = bottom_left_node + 1 + num_nodes_per_boundary ! Next node anti-clockwise
 
                 elements(1, counter + num_edges_per_boundary) = bottom_left_node
                 elements(2, counter + num_edges_per_boundary) = bottom_left_node + num_nodes_per_boundary + 1
@@ -98,7 +98,7 @@ contains
             ! bottom boundary 
             boundary_edges(1, i) = i       ! left node
             boundary_edges(2, i) = i + 1   ! right node
-            boundary_edges(3, i) = i*2 - 1 ! element
+            boundary_edges(3, i) = i       ! element
 
             ! right boundary
             boundary_edges(1, i + num_edges_per_boundary) = i       * num_nodes_per_boundary
@@ -108,7 +108,7 @@ contains
             ! top boundary
             boundary_edges(1, i + num_edges_per_boundary * 2) = num_nodes - i + 1
             boundary_edges(2, i + num_edges_per_boundary * 2) = num_nodes - i
-            boundary_edges(2, i + num_edges_per_boundary * 2) = num_elements - i + 1
+            boundary_edges(3, i + num_edges_per_boundary * 2) = num_elements - i + 1
 
             ! left boundary
             boundary_edges(1, i + num_edges_per_boundary * 3) = (num_nodes_per_boundary - i) * num_nodes_per_boundary + 1

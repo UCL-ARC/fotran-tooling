@@ -126,15 +126,15 @@ contains
         expected_outputs%elements(:,8) = (/5,9,8/)
     
         allocate(expected_outputs%nodes(3, inputs%num_nodes))
-        expected_outputs%nodes(:,1) = (/1,1/)
-        expected_outputs%nodes(:,2) = (/1,2/)
-        expected_outputs%nodes(:,3) = (/1,3/)
-        expected_outputs%nodes(:,4) = (/2,1/)
-        expected_outputs%nodes(:,5) = (/2,2/)
-        expected_outputs%nodes(:,6) = (/2,3/)
-        expected_outputs%nodes(:,7) = (/3,1/)
-        expected_outputs%nodes(:,8) = (/3,2/)
-        expected_outputs%nodes(:,9) = (/3,3/)
+        expected_outputs%nodes(:,1) = (/1.0,1.0/)
+        expected_outputs%nodes(:,2) = (/1.0,2.0/)
+        expected_outputs%nodes(:,3) = (/1.0,3.0/)
+        expected_outputs%nodes(:,4) = (/2.0,1.0/)
+        expected_outputs%nodes(:,5) = (/2.0,2.0/)
+        expected_outputs%nodes(:,6) = (/2.0,3.0/)
+        expected_outputs%nodes(:,7) = (/3.0,1.0/)
+        expected_outputs%nodes(:,8) = (/3.0,2.0/)
+        expected_outputs%nodes(:,9) = (/3.0,3.0/)
         ! Call parent test
         call verify_calculate_mesh(error, inputs, expected_outputs)
     end subroutine test_calculate_mesh_8_2_8_9
@@ -155,7 +155,7 @@ contains
 
         do i = 1, inputs%num_elements
             do j = 1, 3
-                write(failure_message,'(a,i1,a,i1,a,i1,a,i1)') "Unexpected value for elements(", j, ",", i, "), got ", actual_elements(j, i), " expected ", expected_outputs%elements(j, i)
+                write(failure_message,'(a,i1,a,i1,a,i2,a,i2)') "Unexpected value for elements(", j, ",", i, "), got ", actual_elements(j, i), " expected ", expected_outputs%elements(j, i)
                 call check(error, expected_outputs%elements(j, i), actual_elements(j, i), failure_message)
                 if (allocated(error)) return
             end do 
@@ -163,7 +163,7 @@ contains
 
         do i = 1, inputs%num_boundary_nodes
             do j = 1, 3
-                write(failure_message,'(a,i1,a,i1,a,i1,a,i1)') "Unexpected value for boundary_edges(", j, ",", i, "), got ", actual_boundary_edges(j, i), " expected ", expected_outputs%boundary_edges(j, i)
+                write(failure_message,'(a,i1,a,i1,a,i2,a,i2)') "Unexpected value for boundary_edges(", j, ",", i, "), got ", actual_boundary_edges(j, i), " expected ", expected_outputs%boundary_edges(j, i)
                 call check(error, expected_outputs%boundary_edges(j, i), actual_boundary_edges(j, i), failure_message)
                 if (allocated(error)) return
             end do
@@ -171,7 +171,7 @@ contains
 
         do i = 1, inputs%num_nodes
             do j = 1, 2
-                write(failure_message,'(a,i1,a,i1,a,i1,a,i1)') "Unexpected value for nodes(", j, ",", i, "), got ", actual_nodes(j, i), " expected ", expected_outputs%nodes(j, i)
+                write(failure_message,'(a,i1,a,i1,a,f3.1,a,f3.1)') "Unexpected value for nodes(", j, ",", i, "), got ", actual_nodes(j, i), " expected ", expected_outputs%nodes(j, i)
                 call check(error, expected_outputs%nodes(j, i), actual_nodes(j, i), failure_message)
                 if (allocated(error)) return
             end do
