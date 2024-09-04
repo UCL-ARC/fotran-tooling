@@ -16,7 +16,7 @@ program tester
     stat = 0
 
     testsuites = [ &
-        new_testsuite("suite1", collect_mesh_generator_testsuite) &
+        new_testsuite("mesh_generator", collect_mesh_generator_testsuite) &
         ]
 
     call get_argument(1, suite_name)
