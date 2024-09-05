@@ -1,72 +1,35 @@
-program mesh_generator
+module mesh_generator
     use, intrinsic :: iso_fortran_env
-    implicit none 
-    ! Command line arguments
-    integer                       :: argl
-    character(len=:), allocatable :: a
-    integer(kind=int64)           :: box_size
-    real(kind=real64)             :: edge_size
-
-    ! Mesh variables
-    integer :: i, j, num_nodes, num_elements, num_boundary_nodes, &
-               num_edges_per_boundary, num_nodes_per_boundary,    &
-               counter, bottom_left_node
-    integer, dimension(:, :), allocatable :: elements, boundary_edges
-    real(kind=real64), dimension(:, :), allocatable :: nodes
-
-    ! Get command line args (Fortran 2003 standard)
-    if (command_argument_count() > 0) then
-        call get_command_argument(1, length=argl)
-        allocate(character(argl) :: a)
-        call get_command_argument(1, a)
-        read(a,*) box_size
-        call get_command_argument(2, a)
-        read(a,*) edge_size
-    end if
-
-    ! Output start message
-    write(*,'(A)') "Generating mesh using:"
-    write(*,'(A,1I16)') "box size: ", box_size 
-    write(*,*) " process: ", edge_size
-    
-    call calculate_mesh_parameters(num_edges_per_boundary, num_nodes_per_boundary, num_nodes, num_boundary_nodes, num_elements)
-
-    ! Allocate arrays
-    allocate(nodes(2, num_nodes))
-    allocate(elements(3, num_elements))
-    allocate(boundary_edges(3, num_boundary_nodes))
-
-    call calculate_mesh(num_edges_per_boundary, num_nodes, num_elements, num_boundary_nodes, nodes, elements, boundary_edges)
-    
-    call write_mesh_to_file(num_nodes, num_elements, num_boundary_nodes)
+    implicit none
 
 contains
-    subroutine calculate_mesh_parameters(num_edges_per_boundary, num_nodes_per_boundary, num_nodes, num_boundary_nodes, num_elements)
+
+    subroutine calculate_mesh_parameters(box_size, edge_size, num_edges_per_boundary, num_nodes, num_boundary_nodes, num_elements)
         implicit none
-        integer, intent(out) :: num_edges_per_boundary, num_nodes_per_boundary, num_nodes, num_boundary_nodes, num_elements
+        integer(kind=int64), intent(in)  :: box_size
+        real(kind=real64), intent(in)    :: edge_size
+        integer(kind=int64), intent(out) :: num_edges_per_boundary, num_nodes, num_boundary_nodes, num_elements
 
         num_edges_per_boundary = floor(box_size / edge_size)
-        num_nodes_per_boundary = num_edges_per_boundary + 1
-        num_nodes = num_nodes_per_boundary**2
+        num_nodes = (num_edges_per_boundary + 1)**2
         num_boundary_nodes = (num_edges_per_boundary) * 4
         num_elements = 2 * (num_edges_per_boundary)**2
 
-        write(*,*) "** Mesh Parameters **"
-        write(*,*) "   num_edges_per_boundary:", num_edges_per_boundary
-        write(*,*) "   num_nodes_per_boundary:", num_nodes_per_boundary
-        write(*,*) "   num_nodes:", num_nodes
-        write(*,*) "   num_boundary_nodes:", num_boundary_nodes
-        write(*,*) "   num_elements:", num_elements
+        ! write(*,*) "** Mesh Parameters **"
+        ! write(*,*) "   num_edges_per_boundary:", num_edges_per_boundary
+        ! write(*,*) "   num_nodes:", num_nodes
+        ! write(*,*) "   num_boundary_nodes:", num_boundary_nodes
+        ! write(*,*) "   num_elements:", num_elements
     end subroutine calculate_mesh_parameters
 
     subroutine calculate_mesh(num_edges_per_boundary, num_nodes, num_elements, num_boundary_nodes, nodes, elements, boundary_edges)
         implicit none
-        integer, intent(in) :: num_edges_per_boundary, num_nodes, num_boundary_nodes, num_elements
-        integer, dimension(3, num_elements), intent(inout) :: elements
-        integer, dimension(3, num_boundary_nodes), intent(inout) :: boundary_edges
+        integer(kind=int64), intent(in) :: num_edges_per_boundary, num_nodes, num_boundary_nodes, num_elements
+        integer(kind=int64), dimension(3, num_elements), intent(inout) :: elements
+        integer(kind=int64), dimension(3, num_boundary_nodes), intent(inout) :: boundary_edges
         real(kind=real64), dimension(2, num_nodes), intent(inout) :: nodes
         
-        integer :: num_nodes_per_boundary
+        integer :: num_nodes_per_boundary, bottom_left_node, counter, i, j
 
         num_nodes_per_boundary = num_edges_per_boundary + 1
 
@@ -122,9 +85,12 @@ contains
 
     end subroutine calculate_mesh
 
-    subroutine write_mesh_to_file(num_nodes, num_elements, num_boundary_nodes)
+    subroutine write_mesh_to_file(num_nodes, num_elements, num_boundary_nodes, nodes, elements, boundary_edges)
         implicit none
-        integer, intent(in) :: num_nodes, num_elements, num_boundary_nodes
+        integer(kind=int64), intent(in) :: num_nodes, num_elements, num_boundary_nodes
+        integer(kind=int64), dimension(3, num_elements), intent(inout) :: elements
+        integer(kind=int64), dimension(3, num_boundary_nodes), intent(inout) :: boundary_edges
+        real(kind=real64), dimension(2, num_nodes), intent(inout) :: nodes
 
         character*11 :: file_name
         integer :: file_io
@@ -183,4 +149,4 @@ contains
         end do 
     end subroutine write_mesh_to_file
         
-end program mesh_generator
+end module mesh_generator

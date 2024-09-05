@@ -1,3 +1,4 @@
 *.o
 *.mod
 *.DS_Store
+build/
