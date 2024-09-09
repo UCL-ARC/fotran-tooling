@@ -80,7 +80,7 @@ contains
             do j = 1, num_edges_per_boundary
                 bottom_left_node = j + (i - 1) * num_nodes_per_boundary
 
-                elements(1, counter) = bottom_left_node                              ! bottom_left node
+                elements(1, counter) = bottom_left_node                              ! bottom left node
                 elements(2, counter) = bottom_left_node + 1                          ! Next node anti-clockwise
                 elements(3, counter) = bottom_left_node + 1 + num_nodes_per_boundary ! Next node anti-clockwise
 
