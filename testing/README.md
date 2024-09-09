@@ -17,11 +17,8 @@ individually tested for each Fortran unit testing tool we select to test.
 
 ## Aims
 - Test multiple fortran unit testing tools to determine which we would recommend. To do this we will
-    1. [ ] Build a simple Fortran program
-    2. [ ] Create a list of features that should be present in a "good" unit testing tool.
-    3. [ ] Write tests to cover each of the key features determined in the previous step.
+    1. [ ] Create a list of features that should be present in a "good" unit testing tool.
+    2. [ ] Write tests to cover each of the key features determined in the previous step.
+        - [ ] [test-drive](./tests/test-drive)
+        - [ ] [pFUnit](./tests/pFUnit)
 - Build template implementations for the tools we recommend.
-
-## Candidate Tools
-- [test-drive](./tests/test-drive)
-- [pFUnit](./tests/pFUnit)

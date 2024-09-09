@@ -8,6 +8,8 @@ project(
   DESCRIPTION "Fortran tooling"
 )
 
+set(CMAKE_Fortran_FLAGS "-ffree-line-length-none")
+
 # Define src files
 set(PROJ_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 file(GLOB PROJ_MESH_GENERATOR_SOURCES "${PROJ_SRC_DIR}/mesh_generator/*.f90")
