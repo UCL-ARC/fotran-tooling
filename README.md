@@ -44,3 +44,17 @@ cd build
 make
 ```
 This will produce executables for the two src codes, `fortran-tooling-mesh-generator` and `fortran-tooling-poisson`.
+
+## Running the src
+
+### Mesh generator
+
+```sh
+./build/fortran-tooling-mesh-generator <box_size> <edge_size>
+```
+
+### Poisson solver
+
+```sh
+./build/fortran-tooling-poisson # then respond to prompt with the mesh name, likely to be `square_mesh`
+```
