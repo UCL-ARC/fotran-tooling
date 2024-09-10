@@ -26,14 +26,13 @@ This repository aims to improve Fortran best practices within UCL and the wider 
 | Trove | Jan 2021 | Aug 2021 | | [#404](https://github.com/UCL-ARC/research-software-opportunities/issues/404) | | |
 | Zacros | Jan 2021 | Sep 2022 | | [#349](https://github.com/UCL-ARC/research-software-opportunities/issues/349) & older | CMake, CTest | | 
 
-
-## Src code
+## src code
 
 There are two src codes within this repository [mesh_generator](./src/mesh_generator/) and [poisson](./src/poisson/). These are designed to work together. 
-- `mesh_generator` generates a basic square 2D traiangular mesh (see [mesh_generator.f90](./src/mesh_generator/mesh_generator.f90) for more details).
+- `mesh_generator` generates a basic square 2D triangular mesh (see [mesh_generator.f90](./src/mesh_generator/mesh_generator.f90) for more details).
 - `poisson` is a solver which finds the solution of the steady-state heat conduction equation represented by the Poisson equation over a 2D traingular mesh (see [poisson.f90](./src/poisson/poisson.f90) for more details).
 
-## Build
+## Building
 
 We are utilising cmake (see [CMakeLists.txt](./CMakeLists.txt)) for our build system. Therefore, to build this repository, please run the following
 ```sh
