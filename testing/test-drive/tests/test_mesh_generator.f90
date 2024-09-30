@@ -209,4 +209,14 @@ contains
         deallocate(expected_outputs%elements)
         deallocate(expected_outputs%nodes)
     end subroutine test_calculate_mesh_8_2_8_9
+
+
+    !> A unit test to demonstrate test-drives ability to skip a test
+    !! 
+    !! @param error - An allocatable error_type to track failing tests.
+    subroutine test_skip_example(error)
+        type(error_type), allocatable, intent(out) :: error
+        call skip_test(error, "This feature is not implemented yet")
+        return
+    end subroutine test_skip_example
 end module test_mesh_generator
