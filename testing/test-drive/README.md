@@ -30,12 +30,12 @@ Compilers tested: gfortran (homebrew)
 
 | Feature | Implemented natively | Implemented manually |
 |---------|----------------------|----------------------|
-| Can run individual tests | Y, see [main.f90](./tests/test-drive/main.f90) | N/A |
+| Can run individual tests | No | Yes, see [main.f90](./main.f90). However, this requires running the test executable directly without ctest. |
 | Mocking | No | Not implemented |
 | Stubbing | No | Not implemented |
-| Data driven tests | No | Yes, see verify_calculate_mesh_parameters and verify_calculate_mesh in [test_mesh_generator.f90](./tests/test_mesh_generator.f90)
-| Coverage report | Y, with fpm | N/A |
-| Skip tests | Y, see test_skip_example in [test_calc_pi.f90](./test-drive/tests/test_mesh_generator.f90) | N/A |
+| Data driven tests | No | Yes, see verify_calculate_mesh_parameters and verify_calculate_mesh in [test_mesh_generator.f90](./test_mesh_generator.f90)
+| Coverage report | Yes, with fpm | N/A |
+| Skip tests | Yes, see test_skip_example in [test_calc_pi.f90](./test_mesh_generator.f90) | N/A |
 
 ## Pros
 - Lightweight, procedural unit testing framework based on nothing but standard Fortran.
