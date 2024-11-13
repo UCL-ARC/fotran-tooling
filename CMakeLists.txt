@@ -8,7 +8,7 @@ project(
   DESCRIPTION "Fortran tooling"
 )
 
-set(GFORTRANFLAGS "-ffree-line-length-none")
+set(GFORTRAN_FLAGS "-ffree-line-length-none")
 set(CMAKE_Fortran_FLAGS "${GFORTRAN_FLAGS}") # Update this to match the flags for the chosen compiler
 
 # Define src files
