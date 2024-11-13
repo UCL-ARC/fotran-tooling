@@ -1,14 +1,4 @@
-cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
-
-# Set project name
-project(
-  "fortran-unit-testing-with-test-drive"
-  LANGUAGES "Fortran"
-  VERSION "0.0.1"
-  DESCRIPTION "Playground project for testing test-drive"
-)
-
-# Get test-drive lib
+# Install the test-drive dependency
 set(test_lib "test-drive")
 set(test_pkg "TEST_DRIVE")
 set(test_url "https://github.com/fortran-lang/test-drive")
@@ -32,42 +22,43 @@ if(NOT EXISTS "${${test_pkg}_BINARY_DIR}/include")
     make_directory("${${test_pkg}_BINARY_DIR}/include")
 endif()
 
-# Define src and test files
-set(PROJ_SRC_DIR "${PROJECT_SOURCE_DIR}/../../src")
-set(PROJ_TEST_DIR "${PROJECT_SOURCE_DIR}")
+# Define test files
+set(PROJ_TEST_DRIVE_DIR "${PROJECT_SOURCE_DIR}/testing/test-drive")
+file(GLOB PROJ_TEST_DRIVE_SOURCES "${PROJ_TEST_DRIVE_DIR}/tests/*.f90")
 
-file(GLOB PROJ_SOURCES          "${PROJ_SRC_DIR}/*.f90")
-file(GLOB PROJ_TEST_SOURCES     "${PROJ_TEST_DIR}/tests/*.f90")
-
-# Filter out the main.cxx file. We can only have one main() function in our tests
-set(PROJ_SOURCES_EXC_MAIN ${PROJ_SOURCES})
-list(FILTER PROJ_SOURCES_EXC_MAIN EXCLUDE REGEX ".*main.f90")
-
-# Build src executable
-add_executable("${PROJECT_NAME}" "${PROJ_SOURCES}")
+# Filter out the main.f90 files. We can only have one main() function in our tests
+set(PROJ_POISSON_SOURCES_EXC_MAIN ${PROJ_POISSON_SOURCES})
+set(PROJ_MESH_GENERATOR_SOURCES_EXC_MAIN ${PROJ_MESH_GENERATOR_SOURCES})
+list(FILTER PROJ_POISSON_SOURCES_EXC_MAIN EXCLUDE REGEX ".*main.f90")
+list(FILTER PROJ_MESH_GENERATOR_SOURCES_EXC_MAIN EXCLUDE REGEX ".*main.f90")
 
 # Unit testing
 set(
   tests
-  "calc_pi"
+  "mesh_generator"
+)
+set(
+  test-srcs
+  "main.f90"
 )
 foreach(t IN LISTS tests)
   string(MAKE_C_IDENTIFIER ${t} t) 
-  list(APPEND test-srcs "${PROJ_TEST_DIR}/test_${t}.f90")
+  list(APPEND test-srcs "${PROJ_TEST_DRIVE_DIR}/test_${t}.f90")
 endforeach()
 
 add_executable(
-  "${PROJECT_NAME}-tester"
-  "${PROJ_TEST_DIR}/main.f90"
-  "${PROJ_TEST_SOURCES}"
-  "${PROJ_SOURCES_EXC_MAIN}"
+  "test_${PROJECT_NAME}-test-drive"
+  "${test-srcs}"
+  "${PROJ_TEST_DRIVE_SOURCES}"
+  "${PROJ_POISSON_SOURCES_EXC_MAIN}"
+  "${PROJ_MESH_GENERATOR_SOURCES_EXC_MAIN}"
 )
 target_link_libraries(
-  "${PROJECT_NAME}-tester"
+  "test_${PROJECT_NAME}-test-drive"
   PRIVATE
   "test-drive::test-drive"
 )
 
 foreach(t IN LISTS tests)
-  add_test("${PROJECT_NAME}/${t}" "${PROJECT_NAME}-tester" "${t}")
+  add_test("${PROJECT_NAME}-test-drive/${t}" "test_${PROJECT_NAME}-test-drive" "${t}")
 endforeach()

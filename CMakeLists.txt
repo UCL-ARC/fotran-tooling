@@ -8,7 +8,7 @@ project(
   DESCRIPTION "Fortran tooling"
 )
 
-set(GFORTRANFLAGS "-ffree-line-length-none")
+set(GFORTRAN_FLAGS "-ffree-line-length-none")
 set(CMAKE_Fortran_FLAGS "${GFORTRAN_FLAGS}") # Update this to match the flags for the chosen compiler
 
 # Define src files
@@ -19,3 +19,10 @@ file(GLOB PROJ_POISSON_SOURCES "${PROJ_SRC_DIR}/poisson/*.f90")
 # Build src executables
 add_executable("${PROJECT_NAME}-mesh-generator" "${PROJ_MESH_GENERATOR_SOURCES}")
 add_executable("${PROJECT_NAME}-poisson" "${PROJ_POISSON_SOURCES}")
+
+enable_testing()
+
+#--------------------------------------#
+#             test-drive               #
+#--------------------------------------#
+add_subdirectory("testing/test-drive")

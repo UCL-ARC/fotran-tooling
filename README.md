@@ -58,3 +58,7 @@ This will produce executables for the two src codes, `fortran-tooling-mesh-gener
 ```sh
 ./build/fortran-tooling-poisson # then respond to prompt with the mesh name, likely to be `square_mesh`
 ```
+
+## Running the tests
+
+To run the tests run `ctest` from within the `build` directory.

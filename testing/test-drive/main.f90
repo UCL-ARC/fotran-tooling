@@ -4,7 +4,7 @@ program tester
     use testdrive, only : run_testsuite, new_testsuite, testsuite_type, &
         & select_suite, run_selected, get_argument
 
-    use test_cal_pi, only : collect_calc_pi_suite
+    use test_mesh_generator, only : collect_mesh_generator_testsuite
 
     implicit none
 
@@ -16,7 +16,7 @@ program tester
     stat = 0
 
     testsuites = [ &
-        new_testsuite("suite1", collect_calc_pi_suite) &
+        new_testsuite("mesh_generator", collect_mesh_generator_testsuite) &
         ]
 
     call get_argument(1, suite_name)
@@ -25,27 +25,27 @@ program tester
     if (allocated(suite_name)) then
         is = select_suite(testsuites, suite_name)
         if (is > 0 .and. is <= size(testsuites)) then
-        if (allocated(test_name)) then
-            write(error_unit, fmt) "Suite:", testsuites(is)%name
-            call run_selected(testsuites(is)%collect, test_name, error_unit, stat)
-            if (stat < 0) then
-            error stop 1
+            if (allocated(test_name)) then
+                write(error_unit, fmt) "Suite:", testsuites(is)%name
+                call run_selected(testsuites(is)%collect, test_name, error_unit, stat)
+                if (stat < 0) then
+                    error stop 1
+                end if
+            else
+                write(error_unit, fmt) "Testing:", testsuites(is)%name
+                call run_testsuite(testsuites(is)%collect, error_unit, stat)
             end if
         else
-            write(error_unit, fmt) "Testing:", testsuites(is)%name
-            call run_testsuite(testsuites(is)%collect, error_unit, stat)
-        end if
-        else
-        write(error_unit, fmt) "Available testsuites"
-        do is = 1, size(testsuites)
-            write(error_unit, fmt) "-", testsuites(is)%name
-        end do
-        error stop 1
+            write(error_unit, fmt) "Available testsuites"
+            do is = 1, size(testsuites)
+                write(error_unit, fmt) "-", testsuites(is)%name
+            end do
+            error stop 1
         end if
     else
         do is = 1, size(testsuites)
-        write(error_unit, fmt) "Testing:", testsuites(is)%name
-        call run_testsuite(testsuites(is)%collect, error_unit, stat)
+            write(error_unit, fmt) "Testing:", testsuites(is)%name
+            call run_testsuite(testsuites(is)%collect, error_unit, stat)
         end do
     end if
 
