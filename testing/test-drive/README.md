@@ -1,6 +1,29 @@
 # test-drive
 This project offers a lightweight, procedural unit testing framework based on nothing but standard Fortran. Integration with [meson](https://mesonbuild.com/), [cmake](https://cmake.org/) and [Fortran package manager (fpm)](https://github.com/fortran-lang/fpm) is available. Alternatively, the testdrive.F90 source file can be redistributed in the project's testsuite as well.
 
+## Running the tests
+
+The test-drive tests will run with the rest of the [tests](../README.md#running-the-tests) in the repo.
+
+There is a known issue that the tests for test-drive itself will also be ran by `ctest` as shown below
+```sh
+$ ctest   
+Test project /Users/connoraird/work/fortran-tooling/build
+    Start 1: fortran-tooling-test-drive/mesh_generator
+1/4 Test #1: fortran-tooling-test-drive/mesh_generator ...   Passed    0.33 sec
+    Start 2: test-drive/all-tests
+2/4 Test #2: test-drive/all-tests ........................   Passed    0.33 sec
+    Start 3: test-drive/check
+3/4 Test #3: test-drive/check ............................   Passed    0.01 sec
+    Start 4: test-drive/select
+4/4 Test #4: test-drive/select ...........................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Total Test time (real) =   0.69 sec
+```
+
+
 ## Features matrix
 
 Compilers tested: gfortran (homebrew) 

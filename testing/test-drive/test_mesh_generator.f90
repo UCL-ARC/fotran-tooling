@@ -1,6 +1,6 @@
 module test_mesh_generator
     use, intrinsic :: iso_fortran_env
-    use testdrive, only : new_unittest, unittest_type, error_type, check
+    use testdrive, only : new_unittest, unittest_type, error_type, check, skip_test
 
     use mesh_generator
     
