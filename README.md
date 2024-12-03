@@ -20,6 +20,7 @@ This repository aims to improve Fortran best practices within UCL and the wider 
 
 | Name | Start | End | Repo | Opportunity | Tools | Lessons |
 | --- | --- | --- | --- | --- | --- | --- |
+| LFRic | Sept 2024 | March 2025 | [GitHub](https://github.com/exoclim/lfric_dev) | [#594](https://github.com/UCL-ARC/research-software-opportunities/issues/594) | Rose, Cylc | |
 | CONQUEST | May 2023 | May 2024 | [GitHub](https://github.com/OrderN/CONQUEST-release) | [#781](https://github.com/UCL-ARC/research-software-opportunities/issues/781) | Make, VTune, Advisor | |
 | ALPS | Aug 2022 | Jul 2023 | [GitHub](https://github.com/danielver02/ALPS) | [#691](https://github.com/UCL-ARC/research-software-opportunities/issues/691) | Autotools, Ford | |
 | FruitDemand | Apr 2021 | Mar 2023 |  | [#382](https://github.com/UCL-ARC/research-software-opportunities/issues/382) |  Make, Ford, PFUnit | |
