@@ -62,4 +62,7 @@ This will produce executables for the two src codes, `fortran-tooling-mesh-gener
 
 ## Running the tests
 
-To run the tests run `ctest` from within the `build` directory.
+To run the tests, from within the `build` directory, run the following.
+```sh
+$ ctest
+```
