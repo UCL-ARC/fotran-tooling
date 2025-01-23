@@ -3,26 +3,14 @@ This project offers a lightweight, procedural unit testing framework based on no
 
 ## Running the tests
 
-The test-drive tests will run with the rest of the [tests](../README.md#running-the-tests) in the repo.
-
-There is a known issue that the tests for test-drive itself will also be ran by `ctest` as shown below
+All of the tests written with test-drive can be ran by following [#running all of the tests](../README.md#running-all-of-the-tests). However, we can also run a single testsuite or an individual test directly using the test executable. For example to run the `mesh_generator` tests we can run
 ```sh
-$ ctest   
-Test project /Users/connoraird/work/fortran-tooling/build
-    Start 1: fortran-tooling-test-drive/mesh_generator
-1/4 Test #1: fortran-tooling-test-drive/mesh_generator ...   Passed    0.33 sec
-    Start 2: test-drive/all-tests
-2/4 Test #2: test-drive/all-tests ........................   Passed    0.33 sec
-    Start 3: test-drive/check
-3/4 Test #3: test-drive/check ............................   Passed    0.01 sec
-    Start 4: test-drive/select
-4/4 Test #4: test-drive/select ...........................   Passed    0.01 sec
-
-100% tests passed, 0 tests failed out of 4
-
-Total Test time (real) =   0.69 sec
+$ <root of repo>/build/testing/test-drive/test_fortran-tooling-test-drive mesh_generator
 ```
-
+and to run the single `mesh_generator` test `test_calculate_mesh_parameters_5_1`
+```sh
+$ <root of repo>/build/testing/test-drive/test_fortran-tooling-test-drive mesh_generator test_calculate_mesh_parameters_5_1
+```
 
 ## Features matrix
 
@@ -33,9 +21,9 @@ Compilers tested: gfortran (homebrew)
 | Can run individual tests | No | Yes, see [main.f90](./main.f90). However, this requires running the test executable directly without ctest. |
 | Mocking | No | Not implemented |
 | Stubbing | No | Not implemented |
-| Data driven tests | No | Yes, see verify_calculate_mesh_parameters and verify_calculate_mesh in [test_mesh_generator.f90](./test_mesh_generator.f90)
+| Data driven tests | No | Yes, but this is very cumbersome. See `verify_calculate_mesh_parameters` and `verify_calculate_mesh` in [test_mesh_generator.f90](./test_mesh_generator.f90)
 | Coverage report | Yes, with fpm | N/A |
-| Skip tests | Yes, see test_skip_example in [test_calc_pi.f90](./test_mesh_generator.f90) | N/A |
+| Skip tests | Yes, see `test_skip_example` in [test_mesh_generator.f90](./test_mesh_generator.f90) | N/A |
 
 ## Pros
 - Lightweight, procedural unit testing framework based on nothing but standard Fortran.
