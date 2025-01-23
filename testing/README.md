@@ -30,3 +30,16 @@ Test project /Users/connoraird/work/fortran-tooling/build
 
 Total Test time (real) =   0.69 sec
 ```
+
+## Template Features matrix
+
+Compilers tested: *A list of compilers we have tried with these tests*
+
+| Feature | Implemented natively | Implemented manually |
+|---------|----------------------|----------------------|
+| Can run individual tests | Yes or No (explanation) | Yes or No (explanation) |
+| Mocking | Yes or No (explanation) | Yes or No (explanation) |
+| Stubbing | Yes or No (explanation) | Yes or No (explanation) |
+| Data driven tests | Yes or No (explanation) | Yes or No (explanation) |
+| Coverage report | Yes or No (explanation) | Yes or No (explanation) |
+| Skip tests | Yes or No (explanation) | Yes or No (explanation) |
