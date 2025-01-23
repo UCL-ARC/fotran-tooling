@@ -1,0 +1,46 @@
+name = "Fortran-tooling"
+version = "0.1.0"
+license = "MIT"
+author = "Connor Aird, Mashy Green, Duncan Leggat, Ilektra Christidi, Tuomas Koskela"
+maintainer = "c.aird@ucl.ac.uk"
+copyright = "Copyright 2025, UCL ARC"
+
+[fortran]
+source-form = "free"
+
+[profiles.gfortran.linux]
+flags = "-ffree-line-length-none"
+
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+
+[install]
+library = false
+
+[dev-dependencies]
+test-drive.git = "https://github.com/fortran-lang/test-drive"
+test-drive.tag = "v0.5.0"
+garden.git = "https://gitlab.com/connoraird/garden"
+garden.tag = "8-dp-integer-assertions"
+
+[[executable]]
+name = "poisson"
+source-dir = "src/poisson"
+main = "main.f90"
+
+[[executable]]
+name = "mesh_generator"
+source-dir = "src/mesh_generator"
+main = "main.f90"
+
+[[test]]
+name = "test-drive-mesh-generator"
+source-dir = "testing/test-drive"
+main = "main.f90"
+
+[[test]]
+name = "garden-mesh-generator"
+source-dir = "testing/garden"
+main = "main.f90"
