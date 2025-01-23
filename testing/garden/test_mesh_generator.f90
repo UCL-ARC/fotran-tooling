@@ -31,7 +31,7 @@ contains
         integer(kind=int64)  :: actual_num_edges_per_boundary, actual_num_nodes, &
                                 actual_num_boundary_nodes, actual_num_elements
 
-        integer  :: &
+        integer(kind=int64)  :: &
             expected_num_edges_per_boundary = 10, &
             expected_num_nodes = 121, &
             expected_num_boundary_nodes = 40, &
@@ -45,16 +45,11 @@ contains
                 actual_num_edges_per_boundary, actual_num_nodes, &
                 actual_num_boundary_nodes, actual_num_elements)
 
-        num_edges_per_boundary = actual_num_edges_per_boundary        
-        num_nodes = actual_num_nodes
-        num_boundary_nodes = actual_num_boundary_nodes
-        num_elements = actual_num_elements
-
         result_ = &
-            assert_equals(num_edges_per_boundary, expected_num_edges_per_boundary).and.&
-            assert_equals(num_nodes, expected_num_nodes).and.&
-            assert_equals(num_boundary_nodes, expected_num_boundary_nodes).and.&
-            assert_equals(num_elements, expected_num_elements)
+            assert_equals(actual_num_edges_per_boundary, expected_num_edges_per_boundary).and.&
+            assert_equals(actual_num_nodes, expected_num_nodes).and.&
+            assert_equals(actual_num_boundary_nodes, expected_num_boundary_nodes).and.&
+            assert_equals(actual_num_elements, expected_num_elements)
 
     end function
 end module garden_mesh_generator
