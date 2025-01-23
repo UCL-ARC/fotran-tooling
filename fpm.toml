@@ -1,0 +1,12 @@
+name = "poisson"
+version = "0.1.0"
+license = "MIT"
+author = "Connor Aird, Mashy Green, Duncan Leggat, Ilektra Christidi, Tuomas Koskela"
+maintainer = "c.aird@ucl.ac.uk"
+copyright = "Copyright 2025, UCL ARC"
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+[install]
+library = false
