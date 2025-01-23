@@ -5,6 +5,12 @@ author = "Connor Aird, Mashy Green, Duncan Leggat, Ilektra Christidi, Tuomas Kos
 maintainer = "c.aird@ucl.ac.uk"
 copyright = "Copyright 2025, UCL ARC"
 
+[fortran]
+source-form = "free"
+
+[profiles.gfortran.linux]
+flags = "-ffree-line-length-none"
+
 [build]
 auto-executables = true
 auto-tests = true
