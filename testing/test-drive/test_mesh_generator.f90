@@ -190,7 +190,7 @@ contains
         expected_outputs%elements(:,6) = (/5,6,9/)
         expected_outputs%elements(:,7) = (/4,8,7/)
         expected_outputs%elements(:,8) = (/5,9,8/)
-        allocate(expected_outputs%nodes(3, inputs%num_nodes))
+        allocate(expected_outputs%nodes(2, inputs%num_nodes))
         expected_outputs%nodes(:,1) = (/1.0,1.0/)
         expected_outputs%nodes(:,2) = (/1.0,2.0/)
         expected_outputs%nodes(:,3) = (/1.0,3.0/)
