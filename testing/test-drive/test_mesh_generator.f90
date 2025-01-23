@@ -1,4 +1,4 @@
-module test_mesh_generator
+module test_drive_mesh_generator
     use, intrinsic :: iso_fortran_env
     use testdrive, only : new_unittest, unittest_type, error_type, check, skip_test
 
@@ -219,4 +219,4 @@ contains
         call skip_test(error, "This feature is not implemented yet")
         return
     end subroutine test_skip_example
-end module test_mesh_generator
+end module test_drive_mesh_generator

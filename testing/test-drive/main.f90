@@ -4,7 +4,7 @@ program tester
     use testdrive, only : run_testsuite, new_testsuite, testsuite_type, &
         & select_suite, run_selected, get_argument
 
-    use test_mesh_generator, only : collect_mesh_generator_testsuite
+    use test_drive_mesh_generator, only : collect_mesh_generator_testsuite
 
     implicit none
 
